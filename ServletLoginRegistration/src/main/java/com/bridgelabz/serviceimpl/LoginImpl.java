@@ -39,12 +39,46 @@ public class LoginImpl implements LoginInf{
 
 		}catch(ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			System.out.println("class not found");
 		}catch(SQLException e)
 		{
-			e.printStackTrace();
+			System.out.println("connection not possible");
+		}
+		finally
+		{
+			if(rs!=null)
+			{
+				try
+				{
+					rs.close();
+				}catch(SQLException e)
+				{
+					System.out.println(e);
+				}
+			}
+			if(pstmt!=null)
+			{
+				try
+				{
+					pstmt.close();
+				}catch(SQLException e)
+				{
+				System.out.println(e);
+				}
+			}
+			if(con!=null)
+			{
+				try
+				{
+					con.close();
+				}catch(SQLException e)
+				{
+					System.out.println(e);
+				}
+			}
 		}
 		return false;
+
 
 	}
 }
