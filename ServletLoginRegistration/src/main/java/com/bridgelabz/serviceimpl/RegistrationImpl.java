@@ -33,7 +33,7 @@ public class RegistrationImpl implements RegistrationInf{
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class not found");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("connection failed");
 		}
 		finally
 		{
