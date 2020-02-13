@@ -31,7 +31,7 @@ public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	static LoginModel lmodel = new LoginModel();
 	static LoginInf linf = new LoginImpl();
-	Logger log = LogManager.getLogger(Login.class);
+	private static final Logger log = LogManager.getLogger(Login.class);
 	
 	/*
 	 * overriding doPost method
@@ -40,9 +40,9 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String name = request.getParameter("name");
+		log.info("Login success");
 		HttpSession session = request.getSession();
 		session.setAttribute("username", name);
-		log.info("welcome");
 		Cookie ck = new Cookie("name" , name);
 		ck.setHttpOnly(true);
 		response.addCookie(ck);
