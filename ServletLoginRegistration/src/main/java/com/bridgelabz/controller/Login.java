@@ -7,12 +7,17 @@
 
 package com.bridgelabz.controller;
 import java.io.IOException;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.bridgelabz.model.LoginModel;
 import com.bridgelabz.service.LoginInf;
@@ -26,7 +31,8 @@ public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	static LoginModel lmodel = new LoginModel();
 	static LoginInf linf = new LoginImpl();
-
+	Logger log = LogManager.getLogger(Login.class);
+	
 	/*
 	 * overriding doPost method
 	 */
@@ -34,21 +40,13 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String name = request.getParameter("name");
-		String password = request.getParameter("password");
-		lmodel.setName(name);
-		lmodel.setPassword(password);
-		boolean b = linf.fetchData(lmodel);
-		if(b)
-		{
-			HttpSession session = request.getSession();
-			session.setAttribute("username", name);
-			RequestDispatcher rd = request.getRequestDispatcher("welcome.jsp");
-			rd.forward(request, response);
-		}
-		else
-		{
-			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
-			rd.forward(request, response);
-		}	
+		HttpSession session = request.getSession();
+		session.setAttribute("username", name);
+		log.info("welcome");
+		Cookie ck = new Cookie("name" , name);
+		ck.setHttpOnly(true);
+		response.addCookie(ck);
+		RequestDispatcher rd = request.getRequestDispatcher("welcome.jsp");
+		rd.forward(request, response);
 	}
 }
