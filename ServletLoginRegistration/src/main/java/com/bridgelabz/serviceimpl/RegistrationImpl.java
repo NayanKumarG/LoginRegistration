@@ -5,10 +5,14 @@
 package com.bridgelabz.serviceimpl;
 import java.sql.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.bridgelabz.model.RegistrationModel;
 import com.bridgelabz.service.RegistrationInf;
 
 public class RegistrationImpl implements RegistrationInf{
+	private static Logger log = LogManager.getLogger(RegistrationImpl.class);
 	Connection con = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
@@ -19,7 +23,7 @@ public class RegistrationImpl implements RegistrationInf{
 	@Override
 	public void saveData(RegistrationModel rmodel) {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306?useSSL=false","root","root");
 			pstmt = con.prepareStatement(qry);
 			pstmt.setString(1,rmodel.getName());
@@ -30,10 +34,8 @@ public class RegistrationImpl implements RegistrationInf{
 			pstmt.setString(6, rmodel.getPhno());
 			pstmt.executeUpdate();
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("Class not found");
-		} catch (SQLException e) {
-			System.out.println("connection failed");
+		}catch (SQLException e) {
+			log.error("connection failed");
 		}
 		finally
 		{
@@ -44,7 +46,7 @@ public class RegistrationImpl implements RegistrationInf{
 					rs.close();
 				}catch(SQLException e)
 				{
-					System.out.println("Resource not closed");
+					log.error("Resource not closed");
 				}
 			}
 			if(pstmt!=null)
@@ -55,7 +57,7 @@ public class RegistrationImpl implements RegistrationInf{
 
 				}catch(SQLException e)
 				{
-					System.out.println("Statement resource not closed");
+					log.error("Statement resource not closed");
 				}
 			}
 			if(con!=null)
@@ -66,7 +68,7 @@ public class RegistrationImpl implements RegistrationInf{
 
 				}catch(SQLException e)
 				{
-					System.out.println("Connection resource not closed");
+					log.error("Connection resource not closed");
 				}
 			}
 		}
