@@ -3,16 +3,20 @@
  * purpose:to fetch data from database
  */
 package com.bridgelabz.serviceimpl;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.bridgelabz.model.LoginModel;
 import com.bridgelabz.service.LoginInf;
 
 public class LoginImpl implements LoginInf{
-
-
+	private static Logger log = LogManager.getLogger(LoginImpl.class);
 	Connection con = null;
 	PreparedStatement pstmt=null;
 	ResultSet rs = null;
@@ -25,24 +29,20 @@ public class LoginImpl implements LoginInf{
 	public boolean fetchData(LoginModel lmodel) {
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");	
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306?useSSL=false","root","root");
 			pstmt=con.prepareStatement(qry);
 			pstmt.setString(1, lmodel.getName());
 			pstmt.setString(2,lmodel.getPassword());
 			rs=pstmt.executeQuery();
-
+			
 			if(rs.next())
 			{
 				return true;
 			}
 
-		}catch(ClassNotFoundException e)
-		{
-			System.out.println("class not found");
 		}catch(SQLException e)
 		{
-			System.out.println("connection not possible");
+			log.error("connection not possible");
 		}
 		finally
 		{
@@ -53,7 +53,7 @@ public class LoginImpl implements LoginInf{
 					rs.close();
 				}catch(SQLException e)
 				{
-					System.out.println(e);
+					log.error(e);
 				}
 			}
 			if(pstmt!=null)
@@ -63,7 +63,7 @@ public class LoginImpl implements LoginInf{
 					pstmt.close();
 				}catch(SQLException e)
 				{
-				System.out.println(e);
+				log.error(e);
 				}
 			}
 			if(con!=null)
@@ -73,7 +73,7 @@ public class LoginImpl implements LoginInf{
 					con.close();
 				}catch(SQLException e)
 				{
-					System.out.println(e);
+					log.error(e);
 				}
 			}
 		}
