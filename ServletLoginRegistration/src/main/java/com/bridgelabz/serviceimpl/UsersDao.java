@@ -5,8 +5,6 @@
  * 
  */
 package com.bridgelabz.serviceimpl;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +14,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.bridgelabz.dao.DBConnection;
 import com.bridgelabz.model.Users;
 import com.bridgelabz.service.UserInf;
 
@@ -28,15 +27,13 @@ private static Logger log = LogManager.getLogger(UsersDao.class);
 	@Override
 	public List<Users> getUsers(int start , int total) {
 		List<Users> users = new ArrayList<Users>();
-		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String qry = ("select * from mydatabase.userRegister limit "+(start-1)+","+total);
 		try
 		{
 
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306?useSSL=false","nayan","nayan");
-			pstmt = con.prepareStatement(qry);
+			pstmt = DBConnection.getConnection().prepareStatement(qry);
 		    rs = pstmt.executeQuery();
 		    while(rs.next())
 		    {
@@ -73,16 +70,7 @@ private static Logger log = LogManager.getLogger(UsersDao.class);
 				log.error(e);
 				}
 			}
-			if(con!=null)
-			{
-				try
-				{
-					con.close();
-				}catch(SQLException e)
-				{
-					log.error(e);
-				}
-			}
+	
 		}
 		return users;
 	}
