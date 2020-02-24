@@ -8,12 +8,12 @@ import java.sql.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.bridgelabz.dao.DBConnection;
 import com.bridgelabz.model.RegistrationModel;
 import com.bridgelabz.service.RegistrationInf;
 
 public class RegistrationImpl implements RegistrationInf{
 	private static Logger log = LogManager.getLogger(RegistrationImpl.class);
-	Connection con = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	String qry = "insert into mydatabase.userRegister values(?,?,?,?,?,?)";
@@ -24,8 +24,7 @@ public class RegistrationImpl implements RegistrationInf{
 	public void saveData(RegistrationModel rmodel) {
 		try {
 			
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306?useSSL=false","root","root");
-			pstmt = con.prepareStatement(qry);
+			pstmt = DBConnection.getConnection().prepareStatement(qry);
 			pstmt.setString(1,rmodel.getName());
 			pstmt.setString(2, rmodel.getPassword());
 			pstmt.setString(3, rmodel.getMail());
@@ -60,17 +59,7 @@ public class RegistrationImpl implements RegistrationInf{
 					log.error("Statement resource not closed");
 				}
 			}
-			if(con!=null)
-			{
-				try
-				{
-					con.close();
-
-				}catch(SQLException e)
-				{
-					log.error("Connection resource not closed");
-				}
-			}
+			
 		}
 
 
